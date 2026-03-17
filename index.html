@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CRC - Child Registration Certificate</title>
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/ionicons.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/shortcodes.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/style.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/font-nadra.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/responsive.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/animate.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/custom.css">
+  <link rel="stylesheet" href="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/css/primefaces.css">
+
+  <style>
+
+    /* ── PRELOADER — same as Visa ── */
+    .preloader {
+      width: 100%; height: 100%;
+      position: fixed; top: 0; left: 0;
+      background: #fff;
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .loading-effect-2 { width: 100px; height: 100px; position: relative; }
+    .loading-effect-2 span,
+    .loading-effect-2 span:before,
+    .loading-effect-2 span:after {
+      content: ""; position: absolute; border-radius: 50%;
+      border: 3px solid #1b5fa7; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .loading-effect-2 span {
+      width: 100%; height: 100%; border-left-color: transparent;
+      animation: spin 2s linear infinite;
+    }
+    .loading-effect-2 span:before { width: 70%; height: 70%; border-right-color: transparent; }
+    .loading-effect-2 span:after  { width: 40%; height: 40%; border-bottom-color: transparent; }
+    @keyframes spin {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to   { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+
+    /* ── PAGE CONTENT — same as Visa ── */
+    .page-content { visibility: hidden; opacity: 0; }
+    .page-content.loaded { visibility: visible; opacity: 1; transition: opacity 0.3s ease; }
+
+    /* ── MENU ICON — same as Visa ── */
+    .menu-icon { width:25px; height:18px; position:relative; cursor:pointer; display:inline-block; }
+    .menu-icon span { position:absolute; height:2.5px; width:100%; background:#1b5fa7; border-radius:9px; transition:0.4s; }
+    .menu-icon span:nth-child(1) { top:0; }
+    .menu-icon span:nth-child(2) { top:7px; }
+    .menu-icon span:nth-child(3) { top:14px; }
+    .menu-icon.active span:nth-child(1) { transform:rotate(45deg); top:7px; }
+    .menu-icon.active span:nth-child(2) { opacity:0; }
+    .menu-icon.active span:nth-child(3) { transform:rotate(-45deg); top:7px; }
+    .mobile-menu { position:fixed; top:65px; width:100%; background:#1e273d; max-height:0; overflow:hidden; transition:max-height .4s; z-index:999; }
+    .mobile-menu.show { max-height:400px; }
+    .mobile-menu a { display:block; padding:18px 25px; color:#fff; text-decoration:none; }
+
+    /* ── FOOTER ── */
+    .footer { text-align:center; font-size:12px; color:#999; padding:25px; }
+
+    /* ══════════════════════════════════════
+       BLUE BANNER
+    ══════════════════════════════════════ */
+    .profile-banner {
+      background-color: #1b5fa7 !important;
+      padding: 28px 24px 68px !important;
+      text-align: center !important;
+      position: relative !important;
+      border-radius: 0 !important;
+    }
+
+    .banner-label {
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      letter-spacing: 3px !important;
+      text-transform: uppercase !important;
+      color: #ffffff !important;
+      opacity: 0.9 !important;
+      margin: 0 0 10px 0 !important;
+      display: block !important;
+      visibility: visible !important;
+      font-family: inherit !important;
+    }
+
+    .banner-child-name {
+      font-size: 26px !important;
+      font-weight: 700 !important;
+      color: #ffffff !important;
+      margin: 0 !important;
+      display: block !important;
+      visibility: visible !important;
+      line-height: 1.2 !important;
+      font-family: inherit !important;
+    }
+
+    /* ── PHOTO CIRCLE ── */
+    .profile-photo-wrap {
+      position: absolute;
+      bottom: -55px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .profile-photo-wrap img {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+      display: block;
+      background: #e8eef7;
+    }
+
+    /* ── CARD BODY ── */
+    .profile-body { padding: 70px 30px 30px; }
+
+    /* CRC number badge — centered below photo */
+    .crc-badge-wrap {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .crc-badge {
+      display: inline-block;
+      background: #eef3fb;
+      border: 1px solid #c5d5ee;
+      color: #1b5fa7;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 5px 20px;
+      border-radius: 20px;
+    }
+
+    /* Divider */
+    .profile-divider {
+      border: none;
+      border-top: 1px solid #e8ecf4;
+      margin: 0;
+    }
+
+    /* ── 2-COLUMN FIELDS GRID ── */
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .field-cell {
+      padding: 18px 16px;
+      border-bottom: 1px solid #f0f3f9;
+    }
+    .field-cell:nth-child(even)      { border-left: 1px solid #f0f3f9; }
+    .field-cell:nth-last-child(-n+2) { border-bottom: none; }
+
+    .field-cell label {
+      display: block;
+      font-size: 10px !important;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #aab !important;
+      font-weight: 700 !important;
+      margin-bottom: 6px !important;
+    }
+
+    .field-cell p {
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: #1e273d !important;
+      margin: 0 !important;
+    }
+
+    /* ── NOT FOUND / ERROR STATE ── */
+    .not-found-box {
+      text-align: center;
+      padding: 50px 30px;
+    }
+    .not-found-box h2 {
+      font-size: 20px;
+      color: #1e273d;
+      margin-bottom: 10px;
+    }
+    .not-found-box p {
+      font-size: 13px;
+      color: #999;
+      line-height: 1.7;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .fields-grid { grid-template-columns: 1fr; }
+      .field-cell:nth-child(even)      { border-left: none; }
+      .field-cell:nth-last-child(-n+2) { border-bottom: 1px solid #f0f3f9; }
+      .field-cell:last-child           { border-bottom: none; }
+      .profile-banner                  { padding: 24px 16px 64px !important; }
+      .profile-body                    { padding: 66px 16px 24px; }
+      .banner-child-name               { font-size: 20px !important; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="loading-effect-2"><span></span></div>
+</div>
+
+<div class="page-content" id="pageContent">
+  <div class="boxed">
+
+    <!-- Header -->
+    <header id="header" class="header bg-color">
+      <div class="container" style="height:70px;">
+        <div class="row">
+          <div class="header-wrap">
+
+            <div class="col-md-6 col-xs-6">
+              <div id="logo" class="logo" style="margin-left:-10px;">
+                <a href="#" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none; line-height:70px;">
+                  <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4L6 12V24C6 34 14 42.5 24 45C34 42.5 42 34 42 24V12L24 4Z" fill="#1b5fa7"/>
+                    <circle cx="24" cy="22" r="6" fill="white"/>
+                    <path d="M16 34C17.5 30 20.5 28 24 28C27.5 28 30.5 30 32 34" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <span style="font-size:20px; font-weight:800; color:#1b5fa7; letter-spacing:2px; font-family:inherit;">CRC</span>
+                  <span style="font-size:10px; font-weight:500; color:#888; letter-spacing:1px; text-transform:uppercase; line-height:1.3; display:inline-block; border-left:1px solid #ddd; padding-left:10px;">Child<br>Registration<br>Certificate</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-xs-6 text-right" style="margin-top:25px; padding-right:25px;">
+              <div class="menu-icon" id="menuIcon" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#">Home</a>
+      <a href="#">Guidelines</a>
+      <a href="#">Downloads</a>
+      <a href="#">FAQ</a>
+      <a href="#">Contact</a>
+    </div>
+
+    <!-- Main -->
+    <section class="flat-row" style="margin-top:60px;">
+      <div class="container">
+        <div class="row pd-contact-v2">
+
+          <div id="main-block" class="col-md-6 col-md-offset-3 animated slideInUp">
+            <article class="post style2" style="padding:0; overflow:visible;">
+
+              <!-- Blue Banner -->
+              <div class="profile-banner">
+                <span class="banner-label">Child Registration Certificate</span>
+                <span class="banner-child-name" id="childName">&nbsp;</span>
+                <div class="profile-photo-wrap">
+                  <img id="photo"
+                    src="https://visa-nadra-gov.pk.e-visa.pk/e-visa/assets/avator/upload/default.jpg"
+                    alt="Photo">
+                </div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="profile-body">
+
+                <!-- CRC Badge only — no S/O D/O line -->
+                <div class="crc-badge-wrap">
+                  <span class="crc-badge" id="crcBadge">—</span>
+                </div>
+
+                <hr class="profile-divider">
+
+                <div class="fields-grid">
+
+                  <div class="field-cell">
+                    <label>Father Name</label>
+                    <p id="father_name">---</p>
+                  </div>
+
+                  <div class="field-cell">
+                    <label>Mother Name</label>
+                    <p id="mother_name">---</p>
+                  </div>
+
+                  <div class="field-cell">
+                    <label>Date of Birth</label>
+                    <p id="dob">---</p>
+                  </div>
+
+                  <div class="field-cell">
+                    <label>Gender</label>
+                    <p id="gender">---</p>
+                  </div>
+
+                  <div class="field-cell">
+                    <label>Issue Date</label>
+                    <p id="issue_date">---</p>
+                  </div>
+
+                  <div class="field-cell">
+                    <label>CRC Number</label>
+                    <p id="crc_number">---</p>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </article>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    COPYRIGHT © 2025 CHILD REGISTRATION CERTIFICATE (CRC) — VERIFICATION PORTAL
+  </div>
+</div>
+
+<script>
+
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSbGW-3YB9MFC5sSxfD1IS0dQvGIC2o-MO1IOhEpkUgiSKwQUwX7t6YJ1oF7srd29T/exec";
+
+  function toggleMenu(){
+    document.getElementById("mobileMenu").classList.toggle("show");
+    document.getElementById("menuIcon").classList.toggle("active");
+  }
+
+  function setText(id, val){
+    var el = document.getElementById(id);
+    if(el) el.innerText = val || "---";
+  }
+
+  function formatDate(d){
+    if(!d) return "---";
+    var p = new Date(d);
+    if(isNaN(p)) return d;
+    return p.toLocaleDateString("en-GB", {day:"2-digit", month:"short", year:"numeric"});
+  }
+
+  function showPage(){
+    document.getElementById("preloader").style.display = "none";
+    document.getElementById("pageContent").classList.add("loaded");
+  }
+
+  function populate(data){
+    document.getElementById("childName").innerText = data.child_name || "—";
+    document.getElementById("crcBadge").innerText  = data.crc        || "—";
+    setText("father_name", data.father_name);
+    setText("mother_name", data.mother_name);
+    setText("gender",      data.gender);
+    setText("dob",         formatDate(data.dob));
+    setText("issue_date",  formatDate(data.issue_date));
+    setText("crc_number",  data.crc);
+    if(data.photo_url){
+      document.getElementById("photo").src = data.photo_url;
+    }
+  }
+
+  var id = new URLSearchParams(window.location.search).get("id");
+
+  if(id){
+    fetch(APPS_SCRIPT_URL + "?id=" + encodeURIComponent(id))
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(!data || !data.child_name){
+          document.getElementById("main-block").innerHTML =
+            '<article class="post style2"><div class="not-found-box"><h2>Record Not Found</h2><p>No CRC record found for this ID.<br>Please verify the QR code or contact the issuing authority.</p></div></article>';
+          showPage();
+          return;
+        }
+        populate(data);
+        showPage();
+      })
+      .catch(function(){
+        document.getElementById("main-block").innerHTML =
+          '<article class="post style2"><div class="not-found-box"><h2>Connection Error</h2><p>Could not reach the verification server.<br>Please check your connection and try again.</p></div></article>';
+        showPage();
+      });
+  } else {
+    document.getElementById("main-block").innerHTML =
+      '<article class="post style2"><div class="not-found-box"><h2>No Certificate ID</h2><p>Please scan the QR code on the Child Registration Certificate.</p></div></article>';
+    showPage();
+  }
+
+</script>
+</body>
+</html>
